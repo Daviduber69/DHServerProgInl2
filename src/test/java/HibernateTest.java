@@ -17,14 +17,13 @@ public class HibernateTest {
         tx.begin();
 
         //Uppgift 1
-        TypedQuery<Student> q1 = em.createQuery(
-                "SELECT s FROM Tutor t JOIN t.teachingGroup s JOIN t.subjectsToTeach subj " +
-                        "WHERE lower(subj.subjectName) = 'science'",
-                Student.class
-        );
-        List<Student> myStudents = q1.getResultList();
-        for (Student student : myStudents) {
-            System.out.println(student);
+        Subject science = em.find(Subject.class, 2);
+      TypedQuery<Tutor> q1 = em.createQuery("SELECT DISTINCT t FROM Tutor t, IN(t.teachingGroup) s WHERE :subject member of t.subjectsToTeach",
+              Tutor.class);
+      q1.setParameter("subject", science);
+        List<Tutor> myStudents = q1.getResultList();
+        for (Tutor students : myStudents) {
+            System.out.println("Uppgift 1: "+students.getTeachingGroup());
         }
 
         //Uppgift 2
